@@ -74,6 +74,7 @@ public class Core implements Runnable {
 		ClassLoader loader = ModuleLoader.class.getClassLoader();
 		moduleLoader = new ModuleLoader( loader );
 		
+		startModule( "org.cluenet.clueservices.modules.services.TestingModule" );
 		startModule( "org.cluenet.clueservices.modules.protocol.UnrealIRCdProtocolModule" );
 		startModule( new SocketModule( Config.get( "server", "ip" ), Integer.parseInt( Config.get( "server", "port" ), 10 ) ) );
 		

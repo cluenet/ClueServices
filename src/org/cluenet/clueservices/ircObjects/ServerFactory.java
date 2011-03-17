@@ -28,6 +28,10 @@ public class ServerFactory {
 		public Boolean isSynchronized() {
 			return isSynchronized;
 		}
+		
+		public String toString() {
+			return name;
+		}
 	}
 	
 	private ServerFactory() {

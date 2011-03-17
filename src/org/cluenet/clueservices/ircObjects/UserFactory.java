@@ -89,6 +89,10 @@ public class UserFactory {
 		public void delChannel( Channel c ) {
 			channels.remove( c.getName() );
 		}
+		
+		public String toString() {
+			return getNick();
+		}
 	}
 
 	

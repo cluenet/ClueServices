@@ -40,6 +40,10 @@ public class ChannelFactory {
 		public void delUser( User u ) {
 			users.remove( u.getNick() );
 		}
+		
+		public String toString() {
+			return getName();
+		}
 	}
 	
 	private ChannelFactory() {

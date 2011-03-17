@@ -58,7 +58,9 @@ public class UnrealIRCdProtocolModule extends Module {
 	}
 	
 	private void write( String line ) {
+		//System.out.println( line );
 		Core.fireEvent( new SocketWriteRequestEvent( line + "\r\n" ) );
+		parseInput( line );
 	}
 	
 	private void connected() {
@@ -267,7 +269,7 @@ public class UnrealIRCdProtocolModule extends Module {
 			if( ( (UserEnterEvent) evt ).getUser().getServer() == self )
 				write( ":" + ( (UserEnterEvent) evt ).getUser() + " JOIN " + ( (UserEnterEvent) evt ).getChannel() );
 			else
-				write( ":" + self + " SAJOIN " + ( (UserEnterEvent) evt ).getChannel() );
+				write( ":" + self + " SAJOIN " + ( (UserEnterEvent) evt ).getUser() + " " + ( (UserEnterEvent) evt ).getChannel() );
 		else if( evt instanceof UserLeaveEvent )
 			if( false ) {} // TODO: Change this for kick.
 			else if( ( (UserLeaveEvent) evt ).getUser().getServer() == self )
@@ -277,7 +279,7 @@ public class UnrealIRCdProtocolModule extends Module {
 			write( ":" + ( (PrivmsgEvent) evt ).getSource() + " PRIVMSG " + ( (PrivmsgEvent) evt ).getTarget() + " :" + ( (PrivmsgEvent) evt ).getParameters() );
 		else if( evt instanceof UserSignonEvent ) {
 			User u = ( (UserSignonEvent) evt ).getParameters();
-			write( "NICK " + u.getNick() + " 1 " + ( System.currentTimeMillis() / 1000 ) + " " + u.getUser() + " " + u.getHost() + " " + u.getServer() + " 0 " + u.getModes() + " * AAAAAA== :" + u.getRealName() );
+			write( "NICK " + u.getNick() + " 1 " + ( System.currentTimeMillis() / 1000 ) + " " + u.getUser() + " " + u.getHost() + " " + self + " 0 " + u.getModes() + " * AAAAAA== :" + u.getRealName() );
 		}
 			
 		// TODO: And on and on and on
