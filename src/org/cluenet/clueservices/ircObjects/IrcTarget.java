@@ -1,0 +1,6 @@
+package org.cluenet.clueservices.ircObjects;
+
+
+public interface IrcTarget {
+	
+}
