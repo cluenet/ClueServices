@@ -32,6 +32,10 @@ public class ServerFactory {
 		public String toString() {
 			return name;
 		}
+		
+		public Server getParent() {
+			return parent;
+		}
 	}
 	
 	private ServerFactory() {
