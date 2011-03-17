@@ -36,6 +36,10 @@ public class ServerFactory {
 		public Server getParent() {
 			return parent;
 		}
+		
+		public String getDescription() {
+			return description;
+		}
 	}
 	
 	private ServerFactory() {
