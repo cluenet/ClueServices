@@ -37,6 +37,8 @@ public class TestingModule extends Module {
 				String data = evt.getParameters();
 				if( data.equals( "!testing" ) )
 					Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( UserFactory.find( "FooBar" ), c, "Testing." ) ) );
+				else if( data.equals( "!force" ) )
+					Core.fireEvent( new ProtocolRequestEvent( new UserJoinEvent( u, ChannelFactory.find( "#cluebotng" ) ) ) );
 			}
 		}
 	}
