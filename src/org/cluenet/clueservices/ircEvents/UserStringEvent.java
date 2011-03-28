@@ -3,7 +3,7 @@ package org.cluenet.clueservices.ircEvents;
 import org.cluenet.clueservices.ircObjects.UserFactory.User;
 
 
-public class UserStringEvent extends UserEvent {
+public abstract class UserStringEvent extends UserEvent {
 	private String string;
 	
 	public UserStringEvent( User u, String str ) {

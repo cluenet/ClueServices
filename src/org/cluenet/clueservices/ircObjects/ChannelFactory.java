@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cluenet.clueservices.ircObjects.UserFactory.User;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 
 public class ChannelFactory {
@@ -43,6 +46,24 @@ public class ChannelFactory {
 		
 		public String toString() {
 			return getName();
+		}
+
+		public Element toXML( Document doc ) {
+			Element e = doc.createElement( "Channel" );
+			e.appendChild( doc.createElement( "Name" ) ).appendChild( doc.createTextNode( name ) );
+			e.appendChild( doc.createElement( "Topic" ) ).appendChild( doc.createTextNode( topic ) );
+			Node u = e.appendChild( doc.createElement( "Users" ) );
+			for( String nick : users.keySet() )
+				u.appendChild( doc.createElement( "Nick" ) ).appendChild( doc.createTextNode( nick ) );
+			return e;
+		}
+
+		public void renameUser( String oldNick, String newNick ) {
+			User u = users.get( oldNick );
+			if( u == null )
+				return;
+			users.put( newNick, u );
+			users.remove( oldNick );
 		}
 	}
 	

@@ -11,6 +11,10 @@ public abstract class UserEvent extends AbstractEvent {
 		user = u;
 	}
 	
+	public User getUser() {
+		return user;
+	}
+	
 	@Override
 	public User getParameters() {
 		return user;

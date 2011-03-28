@@ -13,6 +13,11 @@ public class AccountFactory {
 		private Account() {
 			
 		}
+
+		public String getName() {
+			// TODO Auto-generated method stub
+			return "";
+		}
 	}
 	
 	private AccountFactory() {

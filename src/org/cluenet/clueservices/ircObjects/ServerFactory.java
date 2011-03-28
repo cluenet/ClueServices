@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 
 public class ServerFactory {
 	private static ServerFactory factory = new ServerFactory();
@@ -39,6 +42,20 @@ public class ServerFactory {
 		
 		public String getDescription() {
 			return description;
+		}
+
+		public Element toXML( Document doc ) {
+			Element e = doc.createElement( "Server" );
+			e.appendChild( doc.createElement( "Name" ) ).appendChild( doc.createTextNode( name ) );
+			if( parent != null )
+				e.appendChild( doc.createElement( "Parent" ) ).appendChild( parent.toXML( doc ) );
+			e.appendChild( doc.createElement( "Description" ) ).appendChild( doc.createTextNode( description ) );
+			e.appendChild( doc.createElement( "IsSynchronized" ) ).appendChild( doc.createTextNode( isSynchronized ? "True" : "False" ) );
+			return e;
+		}
+
+		public String getName() {
+			return name;
 		}
 	}
 	

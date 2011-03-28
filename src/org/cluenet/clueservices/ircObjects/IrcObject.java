@@ -1,5 +1,8 @@
 package org.cluenet.clueservices.ircObjects;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 
 public abstract class IrcObject {
 	public static IrcSource getSourceFromName( String name ) {
@@ -17,4 +20,6 @@ public abstract class IrcObject {
 			tgt = ChannelFactory.find( target );
 		return tgt;
 	}
+	
+	public abstract Element toXML( Document doc );
 }

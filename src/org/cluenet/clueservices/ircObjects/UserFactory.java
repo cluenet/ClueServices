@@ -7,6 +7,9 @@ import java.util.Map;
 import org.cluenet.clueservices.ircObjects.ChannelFactory.Channel;
 import org.cluenet.clueservices.ircObjects.ServerFactory.Server;
 import org.cluenet.clueservices.servicesObjects.AccountFactory.Account;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 
 public class UserFactory {
@@ -93,6 +96,26 @@ public class UserFactory {
 		public String toString() {
 			return getNick();
 		}
+
+		@Override
+		public Element toXML( Document doc ) {
+			Element e = doc.createElement( "User" );
+			e.appendChild( doc.createElement( "Nick" ) ).appendChild( doc.createTextNode( nick ) );
+			e.appendChild( doc.createElement( "Username" ) ).appendChild( doc.createTextNode( user ) );
+			e.appendChild( doc.createElement( "Host" ) ).appendChild( doc.createTextNode( host ) );
+			e.appendChild( doc.createElement( "Real" ) ).appendChild( doc.createTextNode( real ) );
+			e.appendChild( doc.createElement( "Modes" ) ).appendChild( doc.createTextNode( modes ) );
+			e.appendChild( doc.createElement( "IP" ) ).appendChild( doc.createTextNode( ip ) );
+			e.appendChild( doc.createElement( "Server" ) ).appendChild( doc.createTextNode( server.getName() ) );
+			if( account != null )
+				e.appendChild( doc.createElement( "Account" ) ).appendChild( doc.createTextNode( account.getName() ) );
+			e.appendChild( doc.createElement( "IsAway" ) ).appendChild( doc.createTextNode( isAway ? "True" : "False" ) );
+			e.appendChild( doc.createElement( "AwayReason" ) ).appendChild( doc.createTextNode( awayReason ) );
+			Node u = e.appendChild( doc.createElement( "Channels" ) );
+			for( String c : channels.keySet() )
+				u.appendChild( doc.createElement( "ChannelName" ) ).appendChild( doc.createTextNode( c ) );
+			return e;
+		}
 	}
 
 	
@@ -126,5 +149,7 @@ public class UserFactory {
 		String oldNick = u.getNick();
 		u.nick = newNick;
 		map.remove( oldNick );
+		for( Channel c : u.getChannels().values() )
+			c.renameUser( oldNick, newNick );
 	}
 }
