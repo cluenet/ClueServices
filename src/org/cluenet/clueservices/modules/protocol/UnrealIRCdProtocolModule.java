@@ -84,12 +84,12 @@ public class UnrealIRCdProtocolModule extends Module {
 				if( binaryIP.length > 4 ) {
 					ArrayList< String > ipParts = new ArrayList< String >();
 					for( int i = 0 ; i < binaryIP.length ; i += 2 )
-						ipParts.add( Integer.toHexString( binaryIP[ i ] << 8 | binaryIP[ i + 1 ] ) );
+						ipParts.add( Integer.toHexString( (int) binaryIP[ i ] << 8 | (int) binaryIP[ i + 1 ] ) );
 					ip = Strings.join( ipParts, ":" );
 				} else {
 					ArrayList< String > ipParts = new ArrayList< String >();
 					for( byte b : binaryIP )
-						ipParts.add( Integer.toString( b ) );
+						ipParts.add( Integer.toString( (int) b & 0xFF ) );
 					ip = Strings.join( ipParts, "." );
 				}
 				
@@ -146,7 +146,8 @@ public class UnrealIRCdProtocolModule extends Module {
 					
 					if( channelName.startsWith( "0" ) ) {
 						synchronized( u.getChannels() ) {
-							for( Channel c : u.getChannels().values() )
+							ArrayList< Channel > channels = new ArrayList< Channel >( u.getChannels().values() );
+							for( Channel c : channels )
 								processPart( u, c, "User left all channels." );
 						}
 						continue;

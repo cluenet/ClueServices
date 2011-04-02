@@ -38,6 +38,8 @@ public class UserFactory {
 			this.ip = ip;
 			this.server = server;
 			this.account = null;
+			isAway = false;
+			awayReason = "";
 		}
 
 		public void setAccount( Account account ) {
@@ -86,7 +88,7 @@ public class UserFactory {
 		
 		public void setAway( String str ) {
 			isAway = true;
-			awayReason= str;
+			awayReason = str;
 		}
 
 		public void delChannel( Channel c ) {
@@ -109,7 +111,7 @@ public class UserFactory {
 			e.appendChild( doc.createElement( "Server" ) ).appendChild( doc.createTextNode( server.getName() ) );
 			if( account != null )
 				e.appendChild( doc.createElement( "Account" ) ).appendChild( doc.createTextNode( account.getName() ) );
-			e.appendChild( doc.createElement( "IsAway" ) ).appendChild( doc.createTextNode( isAway ? "True" : "False" ) );
+			e.appendChild( doc.createElement( "IsAway" ) ).appendChild( doc.createTextNode( ( isAway ? "True" : "False" ) ) );
 			e.appendChild( doc.createElement( "AwayReason" ) ).appendChild( doc.createTextNode( awayReason ) );
 			Node u = e.appendChild( doc.createElement( "Channels" ) );
 			for( String c : channels.keySet() )
