@@ -23,6 +23,7 @@ public class UserFactory {
 		private String real;
 		private String modes;
 		private String ip;
+		private String swhois;
 		private Server server;
 		private Account account;
 		private Boolean isAway;
@@ -40,6 +41,7 @@ public class UserFactory {
 			this.account = null;
 			isAway = false;
 			awayReason = "";
+			swhois = "";
 		}
 
 		public void setAccount( Account account ) {
@@ -90,6 +92,14 @@ public class UserFactory {
 			isAway = true;
 			awayReason = str;
 		}
+		
+		public void setSwhois( String str ) {
+			swhois = str;
+		}
+		
+		public String getSwhois() {
+			return swhois;
+		}
 
 		public void delChannel( Channel c ) {
 			channels.remove( c.getName() );
@@ -113,6 +123,7 @@ public class UserFactory {
 				e.appendChild( doc.createElement( "Account" ) ).appendChild( doc.createTextNode( account.getName() ) );
 			e.appendChild( doc.createElement( "IsAway" ) ).appendChild( doc.createTextNode( ( isAway ? "True" : "False" ) ) );
 			e.appendChild( doc.createElement( "AwayReason" ) ).appendChild( doc.createTextNode( awayReason ) );
+			e.appendChild( doc.createElement( "Swhois" ) ).appendChild( doc.createTextNode( swhois ) );
 			Node u = e.appendChild( doc.createElement( "Channels" ) );
 			for( String c : channels.keySet() )
 				u.appendChild( doc.createElement( "ChannelName" ) ).appendChild( doc.createTextNode( c ) );

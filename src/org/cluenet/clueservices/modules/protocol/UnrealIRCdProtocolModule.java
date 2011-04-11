@@ -28,6 +28,7 @@ import org.cluenet.clueservices.ircEvents.UserNickChangeEvent;
 import org.cluenet.clueservices.ircEvents.UserPartEvent;
 import org.cluenet.clueservices.ircEvents.UserQuitEvent;
 import org.cluenet.clueservices.ircEvents.UserSignonEvent;
+import org.cluenet.clueservices.ircEvents.UserSwhoisEvent;
 import org.cluenet.clueservices.ircEvents.UserSyncJoinEvent;
 import org.cluenet.clueservices.ircEvents.UserUnAwayEvent;
 import org.cluenet.clueservices.ircObjects.ChannelFactory;
@@ -77,7 +78,9 @@ public class UnrealIRCdProtocolModule extends Module {
 			if( data.command.equals( "ping" ) && data.pieces.size() > 0 )
 				write( "PONG :" + data.pieces.get( 0 ) );
 			
-			else if( data.command.equals( "nick" ) && data.pieces.size() > 10 ) {
+			else if( data.command.equals( "pong" ) && data.pieces.size() > 0 ) {
+				// TODO: Implement.
+			} else if( data.command.equals( "nick" ) && data.pieces.size() > 10 ) {
 				
 				byte[] binaryIP = DatatypeConverter.parseBase64Binary( data.pieces.get( 9 ) );
 				String ip = "";
@@ -114,9 +117,10 @@ public class UnrealIRCdProtocolModule extends Module {
 				Core.fireEvent( new NewServerEvent( newSrv ) );
 			} else if( data.command.equals( "protoctl" ) ) {
 				// TODO: Implement.
-			} else if( data.command.equals( "swhois" ) ) {
-				// TODO: Implement.
-				unhandled( data );
+			} else if( data.command.equals( "swhois" ) && data.pieces.size() > 1 ) {
+				User u = UserFactory.find( data.pieces.get( 0 ) );
+				u.setSwhois( data.pieces.get( 1 ) );
+				Core.fireEvent( new UserSwhoisEvent( u ) );
 			} else if( data.command.equals( "topic" ) ) {
 				// TODO: Implement.
 				unhandled( data );
