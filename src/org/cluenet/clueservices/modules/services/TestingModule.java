@@ -30,8 +30,62 @@ import org.cluenet.clueservices.ircObjects.UserFactory.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.caucho.quercus.QuercusEngine;
+import com.caucho.quercus.lib.ApcModule;
+import com.caucho.quercus.lib.ArrayModule;
+import com.caucho.quercus.lib.BcmathModule;
+import com.caucho.quercus.lib.ClassesModule;
+import com.caucho.quercus.lib.CtypeModule;
+import com.caucho.quercus.lib.ErrorModule;
+import com.caucho.quercus.lib.ExifModule;
+import com.caucho.quercus.lib.FunctionModule;
+import com.caucho.quercus.lib.HashModule;
+import com.caucho.quercus.lib.HtmlModule;
+import com.caucho.quercus.lib.ImageModule;
+import com.caucho.quercus.lib.JavaModule;
+import com.caucho.quercus.lib.MathModule;
+import com.caucho.quercus.lib.MhashModule;
+import com.caucho.quercus.lib.MiscModule;
+import com.caucho.quercus.lib.NetworkModule;
+import com.caucho.quercus.lib.OptionsModule;
+import com.caucho.quercus.lib.OutputModule;
+import com.caucho.quercus.lib.QuercusModule;
+import com.caucho.quercus.lib.TokenModule;
+import com.caucho.quercus.lib.UrlModule;
+import com.caucho.quercus.lib.VariableModule;
+import com.caucho.quercus.lib.bam.BamModule;
+import com.caucho.quercus.lib.curl.CurlModule;
+import com.caucho.quercus.lib.date.DateModule;
+import com.caucho.quercus.lib.db.MysqlModule;
+import com.caucho.quercus.lib.db.MysqliModule;
+import com.caucho.quercus.lib.db.OracleModule;
+import com.caucho.quercus.lib.db.PDOModule;
+import com.caucho.quercus.lib.db.PostgresModule;
+import com.caucho.quercus.lib.dom.QuercusDOMModule;
+import com.caucho.quercus.lib.file.FileModule;
+import com.caucho.quercus.lib.file.SocketModule;
+import com.caucho.quercus.lib.file.StreamModule;
+import com.caucho.quercus.lib.gettext.GettextModule;
+import com.caucho.quercus.lib.i18n.MbstringModule;
+import com.caucho.quercus.lib.i18n.UnicodeModule;
+import com.caucho.quercus.lib.jms.JMSModule;
+import com.caucho.quercus.lib.json.JsonModule;
+import com.caucho.quercus.lib.mail.MailModule;
+import com.caucho.quercus.lib.mcrypt.McryptModule;
+import com.caucho.quercus.lib.pdf.PDFModule;
+import com.caucho.quercus.lib.reflection.ReflectionModule;
+import com.caucho.quercus.lib.regexp.RegexpModule;
+import com.caucho.quercus.lib.simplexml.SimpleXMLModule;
+import com.caucho.quercus.lib.spl.SplModule;
+import com.caucho.quercus.lib.string.StringModule;
+import com.caucho.quercus.lib.xml.XMLWriterModule;
+import com.caucho.quercus.lib.xml.XmlModule;
+import com.caucho.quercus.lib.zip.ZipModule;
+import com.caucho.quercus.lib.zlib.ZlibModule;
+
 
 public class TestingModule extends Module {
+	private QuercusEngine php = null;
 	
 	@Override
 	protected void event( Event take ) {
@@ -44,7 +98,7 @@ public class TestingModule extends Module {
 			Channel c = ChannelFactory.find( "#clueirc" );
 			if( u.getNick().equals( "FooBar" ) ) {
 				Core.fireEvent( new ProtocolRequestEvent( new UserJoinEvent( u, c ) ) );
-				Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( u, c, "Hello, world!" ) ) );
+				Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( u, c, "\001ACTION eyes Damian.\001" ) ) );
 			}
 		} else if( take instanceof PrivmsgEvent ) {
 			PrivmsgEvent evt = (PrivmsgEvent) take;
@@ -53,7 +107,7 @@ public class TestingModule extends Module {
 				Channel c = (Channel) evt.getTarget();
 				String data = evt.getParameters();
 				if( data.equals( "!testing" ) )
-					Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( UserFactory.find( "FooBar" ), c, "Testing." ) ) );
+					Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( UserFactory.find( "FooBar" ), c, "Testing2." ) ) );
 				else if( data.equals( "!force" ) )
 					Core.fireEvent( new ProtocolRequestEvent( new UserJoinEvent( u, ChannelFactory.find( "#cluebotng" ) ) ) );
 				else if( data.equals( "!xml" ) ) {
@@ -97,6 +151,83 @@ public class TestingModule extends Module {
 					} catch( Exception e ) {
 						Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( UserFactory.find( "FooBar" ), c, "Error: " + e.getMessage() ) ) );
 						throw new RuntimeException( e );
+					}
+				} else if( data.startsWith( "!php " ) && ( u.getNick().equals( "Cobi" ) || u.getNick().equals( "Rich" ) ) ) {
+					try {
+						if( php == null ) {
+							php = new QuercusEngine();
+							// Add modules from this list: http://www.caucho.com/resin-4.0-javadoc/com/caucho/quercus/module/QuercusModule.html
+							//php.getQuercus().addModule( new ApacheModule() );
+							php.getQuercus().addModule( new ApcModule() );
+							php.getQuercus().addModule( new ArrayModule() );
+							php.getQuercus().addModule( new BamModule() );
+							php.getQuercus().addModule( new BcmathModule() );
+							php.getQuercus().addModule( new ClassesModule() );
+							php.getQuercus().addModule( new CtypeModule() );
+							php.getQuercus().addModule( new CurlModule() );
+							php.getQuercus().addModule( new DateModule() );
+							php.getQuercus().addModule( new ErrorModule() );
+							php.getQuercus().addModule( new ExifModule() );
+							php.getQuercus().addModule( new FileModule() );
+							php.getQuercus().addModule( new FunctionModule() );
+							php.getQuercus().addModule( new GettextModule() );
+							php.getQuercus().addModule( new HashModule() );
+							php.getQuercus().addModule( new HtmlModule() );
+							//php.getQuercus().addModule( new HttpModule() );
+							php.getQuercus().addModule( new ImageModule() );
+							php.getQuercus().addModule( new JavaModule() );
+							php.getQuercus().addModule( new JMSModule() );
+							php.getQuercus().addModule( new JsonModule() );
+							php.getQuercus().addModule( new MailModule() );
+							php.getQuercus().addModule( new MathModule() );
+							php.getQuercus().addModule( new MbstringModule() );
+							php.getQuercus().addModule( new McryptModule() );
+							php.getQuercus().addModule( new MhashModule() );
+							php.getQuercus().addModule( new MiscModule() );
+							php.getQuercus().addModule( new MysqliModule() );
+							php.getQuercus().addModule( new MysqlModule() );
+							php.getQuercus().addModule( new NetworkModule() );
+							php.getQuercus().addModule( new OptionsModule() );
+							php.getQuercus().addModule( new OracleModule() );
+							php.getQuercus().addModule( new OutputModule() );
+							php.getQuercus().addModule( new PDFModule() );
+							php.getQuercus().addModule( new PDOModule() );
+							php.getQuercus().addModule( new PostgresModule() );
+							php.getQuercus().addModule( new QuercusDOMModule() );
+							php.getQuercus().addModule( new QuercusModule() );
+							php.getQuercus().addModule( new ReflectionModule() );
+							php.getQuercus().addModule( new RegexpModule() );
+							//php.getQuercus().addModule( new ResinModule() );
+							//php.getQuercus().addModule( new SessionModule() );
+							php.getQuercus().addModule( new SimpleXMLModule() );
+							php.getQuercus().addModule( new SocketModule() );
+							php.getQuercus().addModule( new SplModule() );
+							php.getQuercus().addModule( new StreamModule() );
+							php.getQuercus().addModule( new StringModule() );
+							php.getQuercus().addModule( new TokenModule() );
+							php.getQuercus().addModule( new UnicodeModule() );
+							php.getQuercus().addModule( new UrlModule() );
+							php.getQuercus().addModule( new VariableModule() );
+							//php.getQuercus().addModule( new WebSocketModule() );
+							php.getQuercus().addModule( new XmlModule() );
+							php.getQuercus().addModule( new XMLWriterModule() );
+							php.getQuercus().addModule( new ZipModule() );
+							php.getQuercus().addModule( new ZlibModule() );
+						}
+						php.execute(
+								"<?PHP " +
+								"import org.cluenet.clueservices.core.Core; " +
+								"import org.cluenet.clueservices.ircEvents.ProtocolRequestEvent; " +
+								"import org.cluenet.clueservices.ircEvents.PrivmsgEvent; " +
+								"import org.cluenet.clueservices.ircObjects.UserFactory; " +
+								"import org.cluenet.clueservices.ircObjects.ChannelFactory; " +
+								"import org.cluenet.clueservices.misc.IRC;" + 
+								data.substring( 4 ) + 
+								" ?>"
+						);
+					} catch( Exception e ) {
+						Core.fireEvent( new ProtocolRequestEvent( new PrivmsgEvent( UserFactory.find( "FooBar" ), c, "Error: " + e.getMessage() + " " + e.toString() ) ) );
+						e.printStackTrace();
 					}
 				}
 			}
